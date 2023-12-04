@@ -1,0 +1,111 @@
+import tkinter as tk
+from tkinter import ttk
+from tkcalendar import Calendar, DateEntry
+from datetime import datetime
+
+class EventMasterApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("EventMaster")
+        self.root.geometry("600x400")
+
+        # Welcome message
+        ttk.Label(root, text="Welcome to EventMaster", font=("Helvetica", 16)).pack(pady=10)
+
+        # Display today's date and summary of upcoming events
+        self.display_date_summary()
+
+        # Buttons for navigation with images
+        calendar_img = tk.PhotoImage(file="calendar.png")
+        add_event_img = tk.PhotoImage(file="addevent.png")
+        exit_img = tk.PhotoImage(file="exit.png")
+
+        ttk.Button(root, text="View Calendar", command=self.show_calendar, image=calendar_img, compound=tk.LEFT).pack(pady=10)
+        ttk.Button(root, text="Add New Event", command=self.show_event_creation, image=add_event_img, compound=tk.LEFT).pack(pady=10)
+        ttk.Button(root, text="Exit", command=root.destroy, image=exit_img, compound=tk.LEFT).pack(pady=10)
+
+    def display_date_summary(self):
+        # Add code here to display today's date and summary of upcoming events
+        pass
+
+    def show_calendar(self):
+        # Create a new top-level window for the calendar view
+        cal_window = tk.Toplevel(self.root)
+        cal_window.title("Calendar View")
+        cal_window.geometry("600x500")
+
+        # Create a Calendar widget
+        cal = Calendar(cal_window, selectmode="day")
+        cal.pack(pady=10)
+
+        # Highlight dates with scheduled events (customize this part)
+        scheduled_dates = ["2023-12-01", "2023-12-15", "2023-12-20"]
+        for date_str in scheduled_dates:
+            date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
+            cal.calevent_create(date_obj, "Event", "event")
+
+        # Buttons for month navigation with images
+        prev_month_img = tk.PhotoImage(file="prevmonth.png")
+        next_month_img = tk.PhotoImage(file="nextmonth.png")
+
+        ttk.Button(cal_window, command=cal.prev_month, image=prev_month_img, compound=tk.LEFT).pack(side=tk.LEFT)
+        ttk.Button(cal_window, command=cal.next_month, image=next_month_img, compound=tk.LEFT).pack(side=tk.RIGHT)
+
+    def show_event_creation(self):
+        # Create a new top-level window for event creation
+        event_window = tk.Toplevel(self.root)
+        event_window.title("Event Creation")
+        event_window.geometry("600x450")
+
+        # Add labels, images, and buttons for event details
+        ttk.Label(event_window, text="Event Title:", font=("Helvetica", 12)).pack(pady=5)
+        title_entry = ttk.Entry(event_window, font=("Helvetica", 12))
+        title_entry.pack(pady=5)
+
+        ttk.Label(event_window, text="Event Date (mm/dd/yy):", font=("Helvetica", 12)).pack(pady=5)
+        date_entry = DateEntry(event_window, font=("Helvetica", 12), date_pattern="mm/dd/yy")
+        date_entry.pack(pady=5)
+
+        ttk.Label(event_window, text="Address:", font=("Helvetica", 12)).pack(pady=5)
+        address_entry = ttk.Entry(event_window, font=("Helvetica", 12))
+        address_entry.pack(pady=5)
+
+        ttk.Label(event_window, text="Notes:", font=("Helvetica", 12)).pack(pady=5)
+        notes_text = tk.Text(event_window, wrap=tk.WORD, width=40, height=5)
+        notes_text.pack(pady=5)
+
+        # Option to set reminders and notifications (customize this)
+        reminder_var = tk.IntVar()
+        ttk.Checkbutton(event_window, text="Set Reminder", variable=reminder_var).pack(pady=5)
+
+        # Save and cancel buttons for event creation with images
+        save_img = tk.PhotoImage(file="save.png")
+        cancel_img = tk.PhotoImage(file="cancel.png")
+
+        save_button = ttk.Button(event_window, command=lambda: self.save_event(title_entry.get(), date_entry.get(), address_entry.get(), notes_text.get("1.0", tk.END), reminder_var.get()),
+                                 image=save_img, compound=tk.NONE)
+        save_button.image = save_img  # Retain reference to the image
+        save_button.pack(side=tk.LEFT, padx=10)
+
+        cancel_button = ttk.Button(event_window, command=event_window.destroy,
+                                   image=cancel_img, compound=tk.NONE)
+        cancel_button.image = cancel_img  # Retain reference to the image
+        cancel_button.pack(side=tk.RIGHT, padx=10)
+
+    def save_event(self, title, date, address, notes, reminder):
+        # Implement the function to save events
+        # For now, print the details (customize this)
+        print("Event Title:", title)
+        print("Event Date:", date)
+        print("Address:", address)
+        print("Notes:", notes)
+        print("Set Reminder:", reminder)
+
+        # Add reminders and notifications logic here (customize this)
+        if reminder:
+            print("Reminder set!")
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = EventMasterApp(root)
+    root.mainloop()
